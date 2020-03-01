@@ -9,20 +9,14 @@ import sys
 
 
 def is_nested(line):
+    openers = [ '(', '{', '[', '<', '(*' ]
     stack = []
     for l in line:
-        if "(" in l:
-            stack.append('(')
+        if openers in l:
+            stack.append(openers)
         else:
             stack.pop()
-            if '{' in l:
-                stack.append('{')
-            else:
-                stack.pop()
-                if '[' in l:
-                    stack.append('[')
-                else:
-                    stack.pop()
+        
                 
     if len(stack) == 0:
         return "Yes"
