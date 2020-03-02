@@ -7,32 +7,42 @@ __author__ = "Janelle Kuhns"
 
 import sys
 
+openers = ['[', '(', '{', '<', '(*']
+closers = [']', ')', '}', '>', '*)']
 
 def is_nested(line):
-    openers = [ '(', '{', '[', '<', '(*' ]
     stack = []
-    for l in line:
-        if openers in l:
-            stack.append(openers)
-        else:
-            stack.pop()
-        
-                
-    if len(stack) == 0:
-        return "Yes"
-    else:
-        return "No"
-    """Validate a single input line for correct nesting"""
+    unbalanced = False
+    pos = 0
+
+    while line:
+        token = line[0]
+        if line[:2] == '(*' or line[:2] == '*)':
+            token = line[:2]
+        pos += 1
+        if token in closers:
+            index = closers.index(token)
+            match = openers[index]
+            if stack.pop() != match:
+                unbalanced  = True
+                break
+        if token in openers:
+            stack.append(token)
+
+        line = line[len(token):]
+    if stack or unbalanced:
+        return 'No ' + str(pos)
+    return 'Yes'
     
 
 
 def main(args):
-    with open('output.txt', 'r') as file:
-        for line in file:
-            data = file.readlines(line)
-        return data
-    """Open the input file and call `is_nested()` for each line"""
-    # Results: print to console and also write to output file
+    with open('input.txt', 'r') as f:
+        with open('output.txt', 'w') as out:
+            for line in f:
+                read_output = is_nested(line)
+                print(read_output)
+                out.write(read_output + '\n')
 
 
 if __name__ == '__main__':
